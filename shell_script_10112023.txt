@@ -1,0 +1,26 @@
+#!/bin/bash
+
+if [ "$#" -ne 1 ] || [ ! -f "$1" ]; then
+    echo "Usage: $0 employee_data.csv"
+    exit 1
+fi
+
+
+input_file="$1"
+
+
+echo "Employee Data Summary Report"
+echo "-----------------------------"
+
+
+total_employees=$(tail -n +2 "$input_file" | wc -l)
+echo "Total Employees: $total_employees"
+
+
+average_age=$(tail -n +2 "$input_file" | cut -d ',' -f 3 | awk '{ total += $1 } END { printf "Average Age: %.2f\n", total / NR }')
+echo "$average_age"
+
+
+echo "Top 5 Employees by Salary:"
+tail -n +2 "$input_file" | sort -t ',' -k 4 -n -r | head -5
+
